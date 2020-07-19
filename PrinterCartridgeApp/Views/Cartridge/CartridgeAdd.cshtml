@@ -1,6 +1,8 @@
 ﻿@model PrinterCartridgeApp.Models.Cartridge
 @{
     ViewData["Title"] = "CartridgeAdd";
+
+    
 }
 
 <h1>Cartridge Add</h1>
@@ -18,8 +20,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Cartridge_Type" class="control-label"></label>
-                <input asp-for="Cartridge_Type" class="form-control" />
-                <span asp-validation-for="Cartridge_Type" class="text-danger"></span>
+                <select asp-for="Cartridge_Type">
+                    <option value="Toner">Toner</option>
+                    <option value="Imaging Kit">Imaging Kit</option>
+                    <option value="Waste Toner Bottle">Waste Toner Bottle</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Printer_Recd_For" class="control-label"></label>
@@ -31,11 +36,6 @@
                 <input asp-for="Printer_Model" class="form-control" />
                 <span asp-validation-for="Printer_Model" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Date_Keyed" class="control-label"></label>
-                <input asp-for="Date_Keyed" class="form-control" />
-                <span asp-validation-for="Date_Keyed" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <input type="submit" value="Add Cartridge" class="btn btn-primary"/>
             </div>
