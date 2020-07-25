@@ -39,7 +39,8 @@ namespace PrinterCartridgeApp.Controllers
             Cartridge currentCartridge = new Cartridge();
 
             newcartridge.Printer_Model = _printerRepository.GetAllPrinters()
-                .Where(o => o.Printer_Name == newcartridge.Printer_Recd_For).Select(o => o.Printer_Model).FirstOrDefault();  
+                .Where(o => o.Printer_Name == newcartridge.Printer_Recd_For).Select(o => o.Printer_Model)
+                .FirstOrDefault();
 
             newcartridge.Date_Keyed = DateTime.Now;
 
@@ -53,5 +54,16 @@ namespace PrinterCartridgeApp.Controllers
             ModelState.Clear();
             return RedirectToAction("CartridgeAdd", "Cartridge");
         }
+
+        [HttpGet]
+        public IActionResult CartridgeIssue()
+        {
+            var model = new CartridgeViewModel();
+
+            model.PrinterOptions = _printerRepository.GetAllPrinters()
+                .Select(o => new SelectListItem(o.Printer_Name, o.Printer_Name));
+            return View(model);
+        }
+
     }
 }
