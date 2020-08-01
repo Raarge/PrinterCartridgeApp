@@ -11,11 +11,11 @@
     <div class="col=md-4">
         <div class="form-group">
             <label asp-for="Printer_Recd_For" class="control-label"></label>
-            <select asp-for="Printer_Recd_For" asp-items="Model.PrinterOptions" class="form-control" ></select>
+            <select asp-for="Printer_Recd_For" asp-items="Model.PrinterIdReturn" id="ddPrinter" class="form-control" >Choose a Printer</select>
         </div>
         <div class="form-group">
             <label asp-for="Printer_Model" class="control-label"></label>
-
+            <input asp-for="Printer_Model" class="form-control" id="ipPrinterModel" readonly="readonly"/>
         </div>
         <div class="form-group">
             <label asp-for="Cartridge_Type" class="control-label"></label>
@@ -27,3 +27,34 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $('#ddPrinter').on('change', function MyPrinterSelect(){
+            var printerHostname = $("#ddPrinter option:selected").val()
+            console.log('Printer Name: ' + printerHostname);
+            var jsonObject = {
+                printerName: printerHostname
+            }
+            $.ajax({
+                type: 'GET',
+                url: 'GetModel',
+                contentType: 'application/x-www-form-urlencoded',
+                data: jsonObject,
+                dataType: 'json',
+                cache: false,
+                async: true,
+                success: function(result) {
+                    console.log(result);
+                    $("#ipPrinterModel").val(result);
+                },
+                error: function (error){
+                    console.log(error);
+                }
+            });
+
+            event.preventDefault();  // for submit button to prevent it's default action 
+        });
+    </script>
+}

@@ -60,10 +60,20 @@ namespace PrinterCartridgeApp.Controllers
         {
             var model = new CartridgeViewModel();
 
-            model.PrinterOptions = _printerRepository.GetAllPrinters()
+            model.PrinterIdReturn = _printerRepository.GetAllPrinters()
                 .Select(o => new SelectListItem(o.Printer_Name, o.Printer_Name));
+
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult GetModel(string printerName)
+        {
+            var model = new CartridgeViewModel();
+            var printModel = _printerRepository.GetAllPrinters().Where(o => o.Printer_Name == printerName)
+                .Select(o => o.Printer_Model).FirstOrDefault();
+
+            return Json(printModel);
+        }
     }
 }

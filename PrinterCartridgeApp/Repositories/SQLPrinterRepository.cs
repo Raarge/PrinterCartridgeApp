@@ -25,7 +25,7 @@ namespace PrinterCartridgeApp.Repositories
 
         public IEnumerable<Printer> GetAllPrinters()
         {
-            return context.Printers;
+            return context.Printers.OrderBy(o => o.Printer_Name);
         }
 
         public Printer Add(Printer printer)

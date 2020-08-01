@@ -15,6 +15,8 @@ namespace PrinterCartridgeApp.ViewModels
 
         public IEnumerable<SelectListItem> PrinterModelOptions { get; set; }
 
+        public IEnumerable<SelectListItem> PrinterIdReturn { get; set; }
+
         [Required, Display(Name = "Cartridge Number:")]
         public string Cartridge_Number { get; set; }
         [Required, Display(Name = "Printer Model:")]
