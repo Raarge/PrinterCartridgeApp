@@ -62,6 +62,7 @@ namespace PrinterCartridgeApp.Controllers
 
             model.PrinterIdReturn = _printerRepository.GetAllPrinters()
                 .Select(o => new SelectListItem(o.Printer_Name, o.Printer_Name));
+            
 
             return View(model);
         }
@@ -74,6 +75,15 @@ namespace PrinterCartridgeApp.Controllers
                 .Select(o => o.Printer_Model).FirstOrDefault();
 
             return Json(printModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetCartridges(string pModel, string type)
+        {
+            var cartridgeList = _cartridgeRepository.GetAllCartridges().Where(o=>o.Cartridge_Type == type && o.Printer_Model.Trim() == pModel.Trim()).ToList();
+                //.Where(o => o.Printer_Model == pModel).Where(o=> o.Cartridge_Type == type).ToList();
+
+            return Json(cartridgeList);
         }
     }
 }

@@ -13,48 +13,116 @@
             <label asp-for="Printer_Recd_For" class="control-label"></label>
             <select asp-for="Printer_Recd_For" asp-items="Model.PrinterIdReturn" id="ddPrinter" class="form-control" >Choose a Printer</select>
         </div>
-        <div class="form-group">
-            <label asp-for="Printer_Model" class="control-label"></label>
-            <input asp-for="Printer_Model" class="form-control" id="ipPrinterModel" readonly="readonly"/>
+        <div id="formPanel" runat="server" style="display: none">
+            <div class="form-group">
+                <label asp-for="Printer_Model" class="control-label"></label>
+                <input asp-for="Printer_Model" class="form-control" id="ipPrinterModel" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Cartridge_Type" class="control-label"></label>
+                <select asp-for="Cartridge_Type" class="form-control" id="ddType">
+                    <option value="NA">-Select Type-</option>
+                    <option value="Toner">Toner</option>
+                    <option value="Imaging Kit">Imaging Kit</option>
+                    <option value="Waste Toner Bottle">Waste Toner Bottle</option>
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Cartridge_Type" class="control-label"></label>
-            <select asp-for="Cartridge_Type" class="form-control">
-                <option value="Toner">Toner</option>
-                <option value="Imaging Kit">Imaging Kit</option>
-                <option value="Waste Toner Bottle">Waste Toner Bottle</option>
-            </select>
-        </div>
+    </div>
+</div>
+<hr/>
+<div class="form-group">
+    <asp:GridView id="gvCartridges" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
+
+    </asp:GridView>
+</div>
+<div class="form-group">
+    <div id="test">
+
     </div>
 </div>
 
 @section Scripts
 {
     <script>
-        $('#ddPrinter').on('change', function MyPrinterSelect(){
-            var printerHostname = $("#ddPrinter option:selected").val()
-            console.log('Printer Name: ' + printerHostname);
-            var jsonObject = {
-                printerName: printerHostname
-            }
-            $.ajax({
-                type: 'GET',
-                url: 'GetModel',
-                contentType: 'application/x-www-form-urlencoded',
-                data: jsonObject,
-                dataType: 'json',
-                cache: false,
-                async: true,
-                success: function(result) {
-                    console.log(result);
-                    $("#ipPrinterModel").val(result);
-                },
-                error: function (error){
-                    console.log(error);
+        $('#ddPrinter').on('change',
+            function MyPrinterSelect() {
+                var printerHostname = $("#ddPrinter option:selected").val()
+                console.log('Printer Name: ' + printerHostname);
+                var jsonObject = {
+                    printerName: printerHostname
                 }
+                $.ajax({
+                    type: 'GET',
+                    url: 'GetModel',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: jsonObject,
+                    dataType: 'json',
+                    cache: false,
+                    async: true,
+                    success: function(result) {
+                        console.log(result);
+                        $("#ipPrinterModel").val(result);
+                        $("#formPanel").show();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+
+                event.preventDefault(); // for submit button to prevent it's default action 
             });
 
-            event.preventDefault();  // for submit button to prevent it's default action 
-        });
+        $('#ddType').on('change',
+            function MyCartridges() {
+                var modelInfo = $("#ipPrinterModel").val()
+                var typeInfo = $("#ddType option:selected").val()
+                console.log('Cartridge Type: ' + typeInfo);
+                console.log("Model Number: " + modelInfo);
+                var jsonObject = {
+                    pmodel: modelInfo,
+                    type: typeInfo
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: 'GetCartridges',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: jsonObject,
+                    dataType: 'json',
+                    cache: false,
+                    async: true,
+                    success: function(result) {
+                        console.log(result);
+                        $("#gvCartridges").append("<tr><th>Cartridge ID</th><th>Cartridge Number</th><th>Cartridge Type</th><th>Printer Model</th><th>Issue Cartridge</th>")
+                        for (var i = 0; i < result.length; i++) {
+                            debugger;
+                            $("#gvCartridges").append("<tr><td>" + result[i].cartridge_ID + "</td><td>" + result[i].cartridge_Number + "</td><td>" + result[i].cartridge_Type + "</td><td>" +
+                                result[i].printer_Model + "</td><td><button class='btnIssue'>Issue</button></td></tr>")
+                            
+                        };
+                        
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+
+                event.preventDefault(); // for submit button to prevent it's default action 
+            });
+
+        //not used at this time
+        function createIssueCartridgeButton() {
+            return $('<button/>',
+                {
+                    text: 'Issue Cartridge',
+                    id: 'btn_Issue',
+                    click: ClickRefresh
+                });
+        }
+
+        //not used at this time
+        function ClickRefresh() {
+            alert('refresh');
+        }
     </script>
 }
