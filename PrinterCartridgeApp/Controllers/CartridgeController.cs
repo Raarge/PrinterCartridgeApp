@@ -80,10 +80,23 @@ namespace PrinterCartridgeApp.Controllers
         [HttpGet]
         public IActionResult GetCartridges(string pModel, string type)
         {
-            var cartridgeList = _cartridgeRepository.GetAllCartridges().Where(o=>o.Cartridge_Type == type && o.Printer_Model.Trim() == pModel.Trim()).ToList();
+            var cartridgeList = _cartridgeRepository.GetAllCartridges().Where(o=>o.Cartridge_Type == type && o.Printer_Model.Trim() == pModel.Trim() && o.Printer_Used_For == null).ToList();
                 //.Where(o => o.Printer_Model == pModel).Where(o=> o.Cartridge_Type == type).ToList();
 
             return Json(cartridgeList);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCartridge(string printer, int id)
+        {
+            var issueDate = DateTime.Now;
+            var changedCartridge = _cartridgeRepository.GetCartridge(id);
+            changedCartridge.Printer_Used_For = printer;
+            changedCartridge.Date_Used = issueDate;
+
+            _cartridgeRepository.Update(changedCartridge);
+
+            return Json(changedCartridge);
         }
     }
 }

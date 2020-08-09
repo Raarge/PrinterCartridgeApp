@@ -1,4 +1,5 @@
-﻿@model PrinterCartridgeApp.ViewModels.CartridgeViewModel
+﻿@using PrinterCartridgeApp.Controllers
+@model PrinterCartridgeApp.ViewModels.CartridgeViewModel
 @{
 }
 
@@ -11,7 +12,7 @@
     <div class="col=md-4">
         <div class="form-group">
             <label asp-for="Printer_Recd_For" class="control-label"></label>
-            <select asp-for="Printer_Recd_For" asp-items="Model.PrinterIdReturn" id="ddPrinter" class="form-control" >Choose a Printer</select>
+            <select asp-for="Printer_Recd_For" asp-items="Model.PrinterIdReturn" id="ddPrinter" class="form-control">Choose a Printer</select>
         </div>
         <div id="formPanel" runat="server" style="display: none">
             <div class="form-group">
@@ -30,7 +31,7 @@
         </div>
     </div>
 </div>
-<hr/>
+<hr />
 <div class="form-group">
     <asp:GridView id="gvCartridges" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
 
@@ -70,7 +71,7 @@
                     }
                 });
 
-                event.preventDefault(); // for submit button to prevent it's default action 
+                event.preventDefault(); // for submit button to prevent it's default action
             });
 
         $('#ddType').on('change',
@@ -91,38 +92,69 @@
                     dataType: 'json',
                     cache: false,
                     async: true,
-                    success: function(result) {
-                        console.log(result);
-                        $("#gvCartridges").append("<tr><th>Cartridge ID</th><th>Cartridge Number</th><th>Cartridge Type</th><th>Printer Model</th><th>Issue Cartridge</th>")
-                        for (var i = 0; i < result.length; i++) {
-                            debugger;
-                            $("#gvCartridges").append("<tr><td>" + result[i].cartridge_ID + "</td><td>" + result[i].cartridge_Number + "</td><td>" + result[i].cartridge_Type + "</td><td>" +
-                                result[i].printer_Model + "</td><td><button class='btnIssue'>Issue</button></td></tr>")
-                            
+                    success: function(response) {
+                        console.log(response);
+                        $("#gvCartridges").html("<tr><th>Cartridge ID</th><th>Cartridge Number</th><th>Cartridge Type</th><th>Printer Model</th><th>Issue Cartridge</th>")
+                        for (var i = 0; i < response.length; i++) {
+
+                            $("#gvCartridges").append("<tr><td>" +
+                                response[i].cartridge_ID +
+                                "</td><td>" +
+                                response[i].cartridge_Number +
+                                "</td><td>" +
+                                response[i].cartridge_Type +
+                                "</td><td>" +
+                                response[i].printer_Model +
+                                "</td><td><button name='btnIssue' class='btn btn-primary' onclick='issueCartridge(" +
+                                response[i].cartridge_ID +
+                                ")'>Issue</button></td></tr>")
+
                         };
-                        
+
                     },
                     error: function(error) {
                         console.log(error);
                     }
                 });
 
-                event.preventDefault(); // for submit button to prevent it's default action 
+                event.preventDefault(); // for submit button to prevent it's default action
             });
 
-        //not used at this time
-        function createIssueCartridgeButton() {
-            return $('<button/>',
-                {
-                    text: 'Issue Cartridge',
-                    id: 'btn_Issue',
-                    click: ClickRefresh
-                });
-        }
 
-        //not used at this time
-        function ClickRefresh() {
-            alert('refresh');
+        function issueCartridge(chosenCartridge) {
+            var printer = $("#ddPrinter option:selected").val()
+            var cartridge = chosenCartridge
+            var url = $('#RedirectTo').val();
+            console.log("Printer: " + printer);
+            console.log("Cartridge: " + cartridge);
+            console.log("Action: " + url);
+            var jsonObject = {
+                printer: printer,
+                id: cartridge
+            }
+            $.ajax({
+                type: 'POST',
+                url: 'UpdateCartridge',
+                contentType: 'application/x-www-form-urlencoded',
+                data: jsonObject,
+                dataType: 'json',
+                cache: false,
+                async: true,
+                success: function(result) {
+                    console.log(result);
+                    location.reload();
+                    $("#ddPrinter").val($('#ddPrinter option:first').val());
+                    
+                    $('#ddType').val($("#ddType option:first").val());
+                    
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+
         }
     </script>
 }
+        
