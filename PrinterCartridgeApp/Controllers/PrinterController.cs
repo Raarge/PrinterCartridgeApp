@@ -62,5 +62,21 @@ namespace PrinterCartridgeApp.Controllers
 
             return Json(printerID);
         }
+
+        [HttpGet]
+        public IActionResult PrinterList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetPrintersList()
+        {
+            
+            var printers = _printerRepository.GetAllPrinters().Where(o=>o.Printer_Model != "NA");
+
+            return Json(printers);
+        }
+
     }
 }

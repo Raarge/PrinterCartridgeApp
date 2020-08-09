@@ -1,0 +1,54 @@
+﻿@model PrinterCartridgeApp.ViewModels.PrinterViewModel
+
+
+<h1>Printer List</h1>
+
+<h4>Printer</h4>
+<hr />
+
+<div class="row">
+    <div class="col=md-4">
+        <div class="form-group">
+            <asp:GridView id="gvPrinter" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
+
+            </asp:GridView>
+        </div>
+    </div>
+</div>
+<hr/>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(PrintersLoad());
+
+
+        function PrintersLoad() {
+            $.ajax({
+                type: 'GET',
+                url: 'GetPrintersList',
+                contentType: 'application/x-www-form-urlencoded',
+
+                cache: false,
+                async: true,
+                success: function(response) {
+                    console.log(response);
+                    $("#gvPrinter").html("<tr><th>Printer ID</th><th>Printer Name</th><th>Printer Model</th>")
+                    for (var i = 0; i < response.length; i++) {
+
+                        $("#gvPrinter").append("<tr><td>" +
+                            response[i].printer_ID +
+                            "</td><td>" +
+                            response[i].printer_Name +
+                            "</td><td>" +
+                            response[i].printer_Model +
+                            "</td></tr>")
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            }
+        )};
+    </script>
+}
