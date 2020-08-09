@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PrinterCartridgeApp.Data;
 using PrinterCartridgeApp.Interfaces;
 using PrinterCartridgeApp.Models;
+using PrinterCartridgeApp.ViewModels;
 
 namespace PrinterCartridgeApp.Controllers
 {
@@ -31,6 +33,34 @@ namespace PrinterCartridgeApp.Controllers
             _printerRepository.Add(newPrinter);
             ModelState.Clear();
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult PrinterDelete()
+        {
+            var model = new PrinterViewModel();
+
+            model.PrinterReturnByName = _printerRepository.GetAllPrinters().Select(o => new SelectListItem(o.Printer_Name, o.Printer_ID.ToString()));
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetPrinter(int printerID)
+        {
+            var model = new PrinterViewModel();
+
+            model.PrinterSelected = _printerRepository.GetPrinter(printerID);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public IActionResult DeletePrinter(int printerID)
+        {
+            _printerRepository.Delete(printerID);
+
+            return Json(printerID);
         }
     }
 }

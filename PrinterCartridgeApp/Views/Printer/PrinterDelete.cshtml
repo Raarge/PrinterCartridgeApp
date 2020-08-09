@@ -1,0 +1,94 @@
+﻿@using PrinterCartridgeApp.Controllers
+@model PrinterCartridgeApp.ViewModels.PrinterViewModel
+
+
+<h1>Printer Delete</h1>
+
+<h4>Printer</h4>
+<hr />
+
+<div class="row">
+    <div class="col=md-4">
+        <div class="form-group">
+            <label asp-for="Printer_Name" class="control-label"></label>
+            <select asp-for="Printer_Name" asp-items="Model.PrinterReturnByName" id="ddPrinter" class="form-control">Choose a Printer</select>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="form-group">
+    <asp:GridView id="gvPrinter" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
+
+    </asp:GridView>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#ddPrinter').on('change',
+            function MyPrinterSelect() {
+                var printerHostname = $("#ddPrinter option:selected").val()
+                console.log('Printer Name: ' + printerHostname);
+                var jsonObject = {
+                    printerID: printerHostname
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: 'GetPrinter',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: jsonObject,
+                    dataType: 'json',
+                    cache: false,
+                    async: true,
+                    success: function(response) {
+                        console.log(response);
+                        $("#gvPrinter").html("<tr><th>Printer ID</th><th>Printer Name</th><th>Printer Model</th><th>Delete Printer</th>")
+                        $("#gvPrinter").append("<tr><td>" +
+                                response.printerSelected.printer_ID +
+                                "</td><td>" +
+                                response.printerSelected.printer_Name +
+                                "</td><td>" +
+                                response.printerSelected.printer_Model +
+                                "</td><td><button name='btnDeletePrinter' class='btn btn-primary' onclick='DeletePrinter(" +
+                                response.printerSelected.printer_ID +
+                                ")'>Delete</button></td></tr>")
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+
+
+            });
+
+        function DeletePrinter(printerID) {
+            var printerID = printerID
+            var printer = $("#ddPrinter option:selected").val()
+            console.log("Printer: " + printer);
+            console.log("PrinterID: " + printerID);
+            var jsonObject = {
+                printerID: printerID
+            }
+            $.ajax({
+                type: 'POST',
+                url: 'DeletePrinter',
+                contentType: 'application/x-www-form-urlencoded',
+                data: jsonObject,
+                dataType: 'json',
+                cache: false,
+                async: true,
+                success: function (result) {
+                    console.log(result);
+                    location.reload();
+                    $("#ddPrinter").val($('#ddPrinter option:first').val());
+
+                    
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+}
