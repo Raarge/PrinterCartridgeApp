@@ -12,6 +12,8 @@ namespace PrinterCartridgeApp.ViewModels
     {
         public IEnumerable<SelectListItem> PrinterReturnByName { get; set; }
 
+        public List<Printer> Printers { get; set; }
+
         public Printer PrinterSelected { get; set; }
 
         [Key]

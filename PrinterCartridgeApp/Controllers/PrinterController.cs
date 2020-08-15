@@ -66,7 +66,11 @@ namespace PrinterCartridgeApp.Controllers
         [HttpGet]
         public IActionResult PrinterList()
         {
-            return View();
+            var model = new PrinterViewModel();
+
+            model.Printers = _printerRepository.GetAllPrinters().Where(o => o.Printer_Model != "NA").ToList();
+
+            return View(model);
         }
 
         [HttpGet]

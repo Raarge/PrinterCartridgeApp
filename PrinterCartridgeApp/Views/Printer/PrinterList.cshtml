@@ -10,45 +10,61 @@
     <div class="col=md-4">
         <div class="form-group">
             <asp:GridView id="gvPrinter" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
-
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Printer Name</th>
+                            <th>Printer Model</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @Model.Printers)
+                        {
+                            <tr>
+                                <td>@item.Printer_Name</td>
+                                <td>@item.Printer_Model</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </asp:GridView>
         </div>
     </div>
 </div>
-<hr/>
+<hr />
 
-@section Scripts
-{
-    <script>
-        $(document).ready(PrintersLoad());
+@*@section Scripts
+    {
+        <script>
+            $(document).ready(PrintersLoad());
 
 
-        function PrintersLoad() {
-            $.ajax({
-                type: 'GET',
-                url: 'GetPrintersList',
-                contentType: 'application/x-www-form-urlencoded',
+            function PrintersLoad() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'GetPrintersList',
+                    contentType: 'application/x-www-form-urlencoded',
 
-                cache: false,
-                async: true,
-                success: function(response) {
-                    console.log(response);
-                    $("#gvPrinter").html("<tr><th>Printer ID</th><th>Printer Name</th><th>Printer Model</th>")
-                    for (var i = 0; i < response.length; i++) {
+                    cache: false,
+                    async: true,
+                    success: function(response) {
+                        console.log(response);
+                        $("#gvPrinter").html("<tr><th>Printer ID</th><th>Printer Name</th><th>Printer Model</th>")
+                        for (var i = 0; i < response.length; i++) {
 
-                        $("#gvPrinter").append("<tr><td>" +
-                            response[i].printer_ID +
-                            "</td><td>" +
-                            response[i].printer_Name +
-                            "</td><td>" +
-                            response[i].printer_Model +
-                            "</td></tr>")
+                            $("#gvPrinter").append("<tr><td>" +
+                                response[i].printer_ID +
+                                "</td><td>" +
+                                response[i].printer_Name +
+                                "</td><td>" +
+                                response[i].printer_Model +
+                                "</td></tr>")
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
                     }
-                },
-                error: function(error) {
-                    console.log(error);
                 }
-            }
-        )};
-    </script>
-}
+            )};
+        </script>
+    }*@
