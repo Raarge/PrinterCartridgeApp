@@ -10,19 +10,35 @@
     <div class="col=md-4">
         <div class="form-group">
             <asp:GridView id="gvPrinter" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="tblPrinters">
                     <thead>
-                        <tr>
-                            <th>Printer Name</th>
-                            <th>Printer Model</th>
-                        </tr>
+                    <tr>
+                        <th style="width: 100px">Printer ID</th>
+                        <th style="width: 100px">Printer Name</th>
+                        <th style="width: 100px">Printer Model</th>
+                        <th style="width: 100px">Edit / Update</th>
+                    </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in @Model.Printers)
                         {
                             <tr>
-                                <td>@item.Printer_Name</td>
-                                <td>@item.Printer_Model</td>
+                                <td class="Printer_ID">
+                                    <span>@item.Printer_ID</span>
+                                </td>
+                                <td class="Printer_Name">
+                                    <span>@item.Printer_Name</span>
+                                    <input type="text" value="@item.Printer_Name" style="display: none" />
+                                </td>
+                                <td class="Printer_Model">
+                                    <span>@item.Printer_Model</span>
+                                    <input type="text" value="@item.Printer_Model" style="display: none" />
+                                </td>
+                                <td>
+                                    <a class="Edit" href="javascript:;">Edit</a>
+                                    <a class="Update" href="javascript:;" style="display:none">Update</a>
+                                    <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -33,10 +49,98 @@
 </div>
 <hr />
 
-@*@section Scripts
-    {
-        <script>
-            $(document).ready(PrintersLoad());
+@section Scripts
+{
+    <script>
+
+        $(function() {
+            //Remove the dummy row if data present.
+            if ($("#tblPrinters tr").length > 2) {
+                $("#tblPrinters tr:eq(1)").remove();
+            } else {
+                var row = $("#tblPrinters tr:last-child");
+                row.find(".Edit").hide();
+                row.find("span").html('&nbsp;');
+            }
+        });
+
+        //Edit event handler.
+        $("body").on("click",
+            "#tblPrinters .Edit",
+            function() {
+                var row = $(this).closest("tr");
+                $("td", row).each(function() {
+                    if ($(this).find("input").length > 0) {
+                        $(this).find("input").show();
+                        $(this).find("span").hide();
+                    }
+                });
+                row.find(".Update").show();
+                row.find(".Cancel").show();
+                $(this).hide();
+            });
+
+        //Update event handler.
+        $("body").on("click",
+            "#tblPrinters .Update",
+            function() {
+                var row = $(this).closest("tr");
+                $("td", row).each(function() {
+                    if ($(this).find("input").length > 0) {
+                        var span = $(this).find("span");
+                        var input = $(this).find("input");
+                        span.html(input.val());
+                        span.show();
+                        input.hide();
+                    }
+                });
+                row.find(".Edit").show();
+                row.find(".Cancel").hide();
+                $(this).hide();
+
+
+                var printerID = row.find(".Printer_ID").find("span").html();
+                var printerName = row.find(".Printer_Name").find("span").html();
+                var printerModel = row.find(".Printer_Model").find("span").html();
+                var jsonObject = {
+                    printerID: printerID,
+                    printerName: printerName,
+                    printerModel: printerModel
+                }
+                console.log(jsonObject)
+                $.ajax({
+                    type: "POST",
+                    url: "UpdatePrinter",
+                    data: jsonObject,
+                    contentType: 'application/x-www-form-urlencoded',
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response)
+                    }
+                });
+
+                //Cancel event handler.
+                $("body").on("click",
+                    "#tblPrinters .Cancel",
+                    function() {
+                        var row = $(this).closest("tr");
+                        $("td", row).each(function() {
+                            if ($(this).find("input").length > 0) {
+                                var span = $(this).find("span");
+                                var input = $(this).find("input");
+                                input.val(span.html());
+                                span.show();
+                                input.hide();
+                            }
+                        });
+                        row.find(".Edit").show();
+                        row.find(".Update").hide();
+                        $(this).hide();
+                    });
+            });
+
+        // example of how to load on page ready
+        @*          $(document).ready(PrintersLoad());
 
 
             function PrintersLoad() {
@@ -65,6 +169,7 @@
                         console.log(error);
                     }
                 }
-            )};
-        </script>
-    }*@
+            )}*@
+
+    </script>
+}

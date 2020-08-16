@@ -82,5 +82,18 @@ namespace PrinterCartridgeApp.Controllers
             return Json(printers);
         }
 
+        [HttpPost]
+        public IActionResult UpdatePrinter(int printerID, string printerName, string printerModel)
+        {
+            var printer = new Printer();
+            printer.Printer_ID = printerID;
+            printer.Printer_Name = printerName;
+            printer.Printer_Model = printerModel;
+
+
+            _printerRepository.Update(printer);
+
+            return Json(printer);
+        }
     }
 }
