@@ -34,7 +34,7 @@
 <hr />
 <div class="form-group">
     <asp:GridView id="gvCartridges" class="form-group" runat="server" BorderColor="#000000" BoderStyle="None" Borderwidth="1px" CellPadding="3" CellSpacing="5">
-
+        
     </asp:GridView>
 </div>
 <div class="form-group">
@@ -94,22 +94,24 @@
                     async: true,
                     success: function(response) {
                         console.log(response);
-                        $("#gvCartridges").html("<tr><th>Cartridge ID</th><th>Cartridge Number</th><th>Cartridge Type</th><th>Printer Model</th><th>Issue Cartridge</th>")
+                        $("#gvCartridges").html("<table class='table table-bordered' height='64' ><thead><tr><th style='width: 190px'>Cartridge ID</th><th style='width: 190px'>Cartridge Number</th><th style='width: 190px'>Cartridge Type</th><th style='width: 190px'>Printer Model</th><th style='width: 190px'>Issue Cartridge</th></thead></table>")
+                        
                         for (var i = 0; i < response.length; i++) {
 
-                            $("#gvCartridges").append("<tr><td>" +
+                            $("#gvCartridges").append("<tr class='table table-bordered' style='width: 1110px'><td style='width: 221px'>" +
                                 response[i].cartridge_ID +
-                                "</td><td>" +
+                                "</td><td style='width: 221px'>" +
                                 response[i].cartridge_Number +
-                                "</td><td>" +
+                                "</td><td style='width: 221px'>" +
                                 response[i].cartridge_Type +
-                                "</td><td>" +
+                                "</td><td style='width: 221px'>" +
                                 response[i].printer_Model +
-                                "</td><td><button name='btnIssue' class='btn btn-primary' onclick='issueCartridge(" +
+                                "</td><td style='width: 221px'><button name='btnIssue' class='btn btn-primary' onclick='issueCartridge(" +
                                 response[i].cartridge_ID +
                                 ")'>Issue</button></td></tr>")
 
                         };
+                        
 
                     },
                     error: function(error) {
