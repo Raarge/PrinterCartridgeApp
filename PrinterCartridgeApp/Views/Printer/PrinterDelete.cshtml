@@ -42,14 +42,14 @@
                     async: true,
                     success: function(response) {
                         console.log(response);
-                        $("#gvPrinter").html("<tr><th>Printer ID</th><th>Printer Name</th><th>Printer Model</th><th>Delete Printer</th>")
-                        $("#gvPrinter").append("<tr><td>" +
+                        $("#gvPrinter").html("<table class='table table-bordered' height='64' ><thead><tr><th style='width: 25%'>Printer ID</th><th style='width: 25%'>Printer Name</th><th style='width: 25%'>Printer Model</th style='width: 25%'><th>Delete Printer</th></thead></table>")
+                        $("#gvPrinter").append("<tr class='table table-bordered'><td style='width: 277px'>" +
                                 response.printerSelected.printer_ID +
-                                "</td><td>" +
+                                "</td><td style='width: 277px'>" +
                                 response.printerSelected.printer_Name +
-                                "</td><td>" +
+                                "</td><td style='width: 277px'>" +
                                 response.printerSelected.printer_Model +
-                                "</td><td><button name='btnDeletePrinter' class='btn btn-primary' onclick='DeletePrinter(" +
+                                "</td><td style='width: 277px'><button name='btnDeletePrinter' class='btn btn-primary' onclick='DeletePrinter(" +
                                 response.printerSelected.printer_ID +
                                 ")'>Delete</button></td></tr>")
                     },
