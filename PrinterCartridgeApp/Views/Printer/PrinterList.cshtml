@@ -53,16 +53,16 @@
 {
     <script>
 
-        $(function() {
-            //Remove the dummy row if data present.
-            if ($("#tblPrinters tr").length > 2) {
-                $("#tblPrinters tr:eq(1)").remove();
-            } else {
-                var row = $("#tblPrinters tr:last-child");
-                row.find(".Edit").hide();
-                row.find("span").html('&nbsp;');
-            }
-        });
+        //$(function() {
+        //    //Remove the dummy row if data present.
+        //    if ($("#tblPrinters tr").length > 2) {
+        //        $("#tblPrinters tr:eq(1)").remove();
+        //    } else {
+        //        var row = $("#tblPrinters tr:last-child");
+        //        row.find(".Edit").hide();
+        //        row.find("span").html('&nbsp;');
+        //    }
+        //});
 
         //Edit event handler.
         $("body").on("click",
